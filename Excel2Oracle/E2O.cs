@@ -118,7 +118,7 @@ namespace Excel2Oracle
 								}
 								catch (Exception ex)
 								{
-									Log.WriteLog("未能正确打开Oracle表[" + oTablename + "]，跳过此表导入", Log.LogType.Error);
+									Log.WriteLog("未能正确打开Oracle表[" + oTablename + "]，跳过此表导入。错误信息：" + ex.Message + "  " + ex.Source, Log.LogType.Error);
 									continue;
 								}
 								foreach (var x in oracleRow)
