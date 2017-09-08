@@ -121,30 +121,37 @@ namespace Excel2Oracle
 									Log.WriteLog("未能正确打开Oracle表[" + oTablename + "]，跳过此表导入。错误信息：" + ex.Message + "  " + ex.Source, Log.LogType.Error);
 									continue;
 								}
+
+								List<OracleParameter> paras = new List<OracleParameter>();
 								foreach (var x in oracleRow)
 								{
 									string f = x.Key;
 									object v = x.Value;
 									DataColumn c = oracleColumns[f];
 									strF += f + ",";
+									string pa = ":" + f;
+									strV += pa + ",";
 
-									string xx = "";
-									if (c != null)
-									{
-										if (c.DataType == typeof(DateTime))
-										{
-											xx = "to_Date('" + x.Value.ToString() + "','yyyy/mm/dd hh24:mi:ss')";
-										}
-										else if (c.DataType == typeof(int) || c.DataType == typeof(double) || c.DataType == typeof(float) || c.DataType == typeof(decimal))
-										{
-											xx = x.Value.ToString();
-										}
-										else
-										{
-											xx = "'" + x.Value.ToString() + "'";
-										}
-									}
-									strV += xx + ",";
+									paras.Add(new OracleParameter(pa, v));
+
+									//string xx = "";
+									//if (c != null)
+									//{
+									//	if (c.DataType == typeof(DateTime))
+									//	{
+											
+									//		xx = "to_Date('" + x.Value.ToString() + "','yyyy/mm/dd hh24:mi:ss')";
+									//	}
+									//	else if (c.DataType == typeof(int) || c.DataType == typeof(double) || c.DataType == typeof(float) || c.DataType == typeof(decimal))
+									//	{
+									//		xx = x.Value.ToString();
+									//	}
+									//	else
+									//	{
+									//		xx = "'" + x.Value.ToString() + "'";
+									//	}
+									//}
+									//strV += "" + xx + ",";
 								}
 								strF = strF.Substring(0, strF.Length - 1);
 								strV = strV.Substring(0, strV.Length - 1);
@@ -156,6 +163,8 @@ namespace Excel2Oracle
 									{
 										cmd.Connection = connection;
 										cmd.CommandText = sql;
+										cmd.Parameters.AddRange(paras.ToArray());
+										
 										if (cmd.ExecuteNonQuery() <= 0)
 										{
 											Log.WriteLog("Excel表[" + eTablename + "]行号:" + rowNum + "，数据出错，没有正确导入，跳过此行。错误信息：没有插入数据库。\t sql：" + sql, Log.LogType.Error);
