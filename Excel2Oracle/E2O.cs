@@ -8,7 +8,7 @@ using System.IO;
 namespace Excel2Oracle
 {
 	class E2O
-	{
+	{ 
 		public static void Excel2Oracle(Property property)
 		{
 			string ePath = property.ExcelPath;
