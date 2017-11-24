@@ -38,6 +38,8 @@ namespace Excel2Oracle
 				}
 				Log.WriteLog("检查Oracle 通过", Log.LogType.Info);
 
+                System.Threading.Thread.Sleep(2000);
+
 				Log.WriteLog("开始操作", Log.LogType.Info);
 				E2O.Excel2Oracle(property);
 
